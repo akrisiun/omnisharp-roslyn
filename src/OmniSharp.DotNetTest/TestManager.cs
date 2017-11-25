@@ -225,18 +225,22 @@ namespace OmniSharp.DotNetTest
             _writer.Write(rawMessage);
         }
 
-        protected async Task<(bool succeeded, Message message)> TryReadMessageAsync(CancellationToken cancellationToken)
+        // (bool succeeded, Message message)
+        protected async Task<Tuple<bool, Message>> 
+                TryReadMessageAsync(CancellationToken cancellationToken)
         {
             var rawMessage = await Task.Run(() => ReadRawMessage(cancellationToken));
 
             if (rawMessage == null)
             {
-                return (succeeded: false, message: null);
+                // return (succeeded: false, message: null);
+                return new Tuple<bool, Message>(false, null);
             }
 
             Logger.LogDebug($"read: {rawMessage}");
 
-            return (succeeded: true, message: JsonDataSerializer.Instance.DeserializeMessage(rawMessage));
+            // return (succeeded: true, message: JsonDataSerializer.Instance.DeserializeMessage(rawMessage));
+            return new Tuple<bool, Message>(true, JsonDataSerializer.Instance.DeserializeMessage(rawMessage));
         }
 
         protected async Task<Message> ReadMessageAsync(CancellationToken cancellationToken)

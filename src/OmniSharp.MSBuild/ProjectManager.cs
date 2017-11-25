@@ -178,12 +178,19 @@ namespace OmniSharp.MSBuild
         }
 
         private ProjectFileInfo LoadProject(string projectFilePath)
-            => LoadOrReloadProject(projectFilePath, () => ProjectFileInfo.Load(projectFilePath, _projectLoader));
+            => LoadOrReloadProject(projectFilePath, () => 
+            {
+                return ProjectFileInfo.Load(projectFilePath, _projectLoader);
+            });
 
         private ProjectFileInfo ReloadProject(ProjectFileInfo projectFileInfo)
-            => LoadOrReloadProject(projectFileInfo.FilePath, () => projectFileInfo.Reload(_projectLoader));
+            => LoadOrReloadProject(projectFileInfo.FilePath, () => {
+               return projectFileInfo.Reload(_projectLoader);
+            });
 
-        private ProjectFileInfo LoadOrReloadProject(string projectFilePath, Func<(ProjectFileInfo, ImmutableArray<MSBuildDiagnostic>)> loadFunc)
+        private ProjectFileInfo LoadOrReloadProject(string projectFilePath, 
+            // Func<(ProjectFileInfo, ImmutableArray<MSBuildDiagnostic>)> 
+            Func<Tuple<ProjectFileInfo, ImmutableArray<MSBuildDiagnostic>>> loadFunc)
         {
             _logger.LogInformation($"Loading project: {projectFilePath}");
 
@@ -192,7 +199,10 @@ namespace OmniSharp.MSBuild
 
             try
             {
-                (projectFileInfo, diagnostics) = loadFunc();
+                //(projectFileInfo, diagnostics) = 
+                var t = loadFunc();
+                projectFileInfo = t.Item1;
+                diagnostics = t.Item2;
 
                 if (projectFileInfo == null)
                 {

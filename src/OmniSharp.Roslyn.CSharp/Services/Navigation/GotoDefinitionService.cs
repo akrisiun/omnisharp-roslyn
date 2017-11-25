@@ -68,7 +68,9 @@ namespace OmniSharp.Roslyn.CSharp.Services.Navigation
                     else if (location.IsInMetadata && request.WantMetadata)
                     {
                         var cancellationSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(request.Timeout));
-                        var (metadataDocument, _) = await _metadataHelper.GetAndAddDocumentFromMetadata(document.Project, symbol, cancellationSource.Token);
+                        var t = await _metadataHelper.GetAndAddDocumentFromMetadata(document.Project, symbol, cancellationSource.Token);
+                        // (metadataDocument, _)
+                        var metadataDocument = t.Item1;
                         if (metadataDocument != null)
                         {
                             cancellationSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(request.Timeout));

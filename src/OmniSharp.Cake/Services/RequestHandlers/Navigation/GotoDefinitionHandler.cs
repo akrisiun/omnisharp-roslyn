@@ -109,7 +109,8 @@ namespace OmniSharp.Cake.Services.RequestHandlers.Navigation
                 return response;
             }
             var cancellationSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(request.Timeout));
-            var (metadataDocument, _) = await _metadataHelper.GetAndAddDocumentFromMetadata(document.Project, symbol, cancellationSource.Token);
+            var t = await _metadataHelper.GetAndAddDocumentFromMetadata(document.Project, symbol, cancellationSource.Token);
+            var metadataDocument = t.Item1; 
             if (metadataDocument == null)
             {
                 return response;

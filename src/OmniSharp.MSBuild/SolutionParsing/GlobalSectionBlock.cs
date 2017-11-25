@@ -11,8 +11,11 @@ namespace OmniSharp.MSBuild.SolutionParsing
 
         public static GlobalSectionBlock Parse(string headerLine, Scanner scanner)
         {
-            var (name, properties) = ParseNameAndProperties(
+            // var (name, properties) = 
+            var t = ParseNameAndProperties(
                 "GlobalSection", "EndGlobalSection", headerLine, scanner);
+            var name = t.Item1;
+            var properties = t.Item2;
 
             return new GlobalSectionBlock(name, properties);
         }

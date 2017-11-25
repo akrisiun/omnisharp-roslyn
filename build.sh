@@ -9,4 +9,12 @@ if [ "$TRAVIS_OS_NAME" == "osx" ] || [ `uname` == "Darwin" ]; then
 else
   export OMNISHARP_PACKAGE_OSNAME=linux-x64
 fi
-bash ./scripts/cake-bootstrap.sh "$@"
+
+export FrameworkPathOverride=/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5
+
+dotnet restore OmniSharp.sln
+dotnet build   OmniSharp.sln
+# bash ./scripts/cake-bootstrap.sh "$@"
+
+# cd src/OmniSharp.DotNet.ProjectModel/
+# dotnet add OmniSharp.DotNet.ProjectModel.csproj package System.Runtime

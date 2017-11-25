@@ -74,38 +74,48 @@ namespace OmniSharp.MSBuild.ProjectFile
             return new ProjectFileInfo(id, filePath, data);
         }
 
-        public static (ProjectFileInfo projectFileInfo, ImmutableArray<MSBuildDiagnostic> diagnostics) Load(string filePath, ProjectLoader loader)
+        public static Tuple<ProjectFileInfo, ImmutableArray<MSBuildDiagnostic>>
+            // (ProjectFileInfo projectFileInfo, ImmutableArray<MSBuildDiagnostic> diagnostics) 
+            Load(string filePath, ProjectLoader loader)
         {
             if (!File.Exists(filePath))
             {
-                return (null, ImmutableArray<MSBuildDiagnostic>.Empty);
+                // return (null, ImmutableArray<MSBuildDiagnostic>.Empty);
+                return new Tuple<ProjectFileInfo, ImmutableArray<MSBuildDiagnostic>>(null, ImmutableArray<MSBuildDiagnostic>.Empty);
             }
 
-            var (projectInstance, diagnostics) = loader.BuildProject(filePath);
+            var t  = loader.BuildProject(filePath);
+            var projectInstance = t.Item1; // (projectInstance, diagnostics)
+            var diagnostics = t.Item2;
             if (projectInstance == null)
             {
-                return (null, diagnostics);
+                // return (null, diagnostics);
+                return new Tuple<ProjectFileInfo, ImmutableArray<MSBuildDiagnostic>>(null, diagnostics);
             }
 
             var id = ProjectId.CreateNewId(debugName: filePath);
             var data = ProjectData.Create(projectInstance);
             var projectFileInfo = new ProjectFileInfo(id, filePath, data);
 
-            return (projectFileInfo, diagnostics);
+            return new Tuple<ProjectFileInfo, ImmutableArray<MSBuildDiagnostic>>(projectFileInfo, diagnostics);
         }
 
-        public (ProjectFileInfo projectFileInfo, ImmutableArray<MSBuildDiagnostic> diagnostics) Reload(ProjectLoader loader)
+        public // (ProjectFileInfo projectFileInfo, ImmutableArray<MSBuildDiagnostic> diagnostics) 
+            Tuple<ProjectFileInfo, ImmutableArray<MSBuildDiagnostic>>
+            Reload(ProjectLoader loader)
         {
-            var (projectInstance, diagnostics) = loader.BuildProject(FilePath);
+            var t = loader.BuildProject(FilePath);
+            var projectInstance = t.Item1; // (projectInstance, diagnostics) 
+            var diagnostics = t.Item2;
             if (projectInstance == null)
             {
-                return (null, diagnostics);
+                return new Tuple<ProjectFileInfo, ImmutableArray<MSBuildDiagnostic>>(null, diagnostics);
             }
 
             var data = ProjectData.Create(projectInstance);
             var projectFileInfo = new ProjectFileInfo(Id, FilePath, data);
 
-            return (projectFileInfo, diagnostics);
+            return new Tuple<ProjectFileInfo, ImmutableArray<MSBuildDiagnostic>>(projectFileInfo, diagnostics);
         }
 
         public bool IsUnityProject()

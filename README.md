@@ -1,5 +1,19 @@
-omnisharp-roslyn
-================
+
+### VSCode repostories
+
+omnisharp-roslyn  https://github.com/akrisiun/omnisharp-roslyn
+omnisharp-vscode  https://github.com/akrisiun/omnisharp-vscode
+
+### OSX problem
+
+``
+error CS0012: The type 'ValueType' is defined in an assembly that is not referenced. You must add a reference to assembly 'System.Runtime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. [src/OmniSharp.DotNet.ProjectModel/OmniSharp.DotNet.ProjectModel.csproj]
+ProjectReader.cs(580,71): error CS0012: The type 'ValueType' is defined in an assembly that is not referenced. You must add a reference to assembly 'System.Runtime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. [src/OmniSharp.DotNet.ProjectModel/OmniSharp.DotNet.ProjectModel.csproj]
+```
+export FrameworkPathOverride=/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5  
+$Env:FrameworkPathOverride="/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5"   
+
+### omnisharp-roslyn
 
 [![Mono Build Status](https://travis-ci.org/OmniSharp/omnisharp-roslyn.svg?branch=master)](https://travis-ci.org/OmniSharp/omnisharp-roslyn)
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/dj36uvllv0qmkljr/branch/master?svg=true)](https://ci.appveyor.com/project/david-driscoll/omnisharp-roslyn/branch/master)

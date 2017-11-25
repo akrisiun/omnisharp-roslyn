@@ -164,7 +164,9 @@ namespace OmniSharp.DotNetTest
 
             while (!done)
             {
-                var (success, message) = await TryReadMessageAsync(cancellationToken);
+                var t = await TryReadMessageAsync(cancellationToken);
+                var success = t.Item1;      // (success, message)
+                var message = t.Item2;
                 if (!success)
                 {
                     break;
@@ -261,7 +263,9 @@ namespace OmniSharp.DotNetTest
 
             while (!done)
             {
-                var (success, message) = await TryReadMessageAsync(cancellationToken);
+                var t = await TryReadMessageAsync(cancellationToken);
+                var success = t.Item1;      // (success, message)
+                var message = t.Item2;
                 if (!success)
                 {
                     return Array.Empty<TestCase>();

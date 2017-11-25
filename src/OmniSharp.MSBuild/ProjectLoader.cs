@@ -55,7 +55,9 @@ namespace OmniSharp.MSBuild
             return globalProperties;
         }
 
-        public (MSB.Execution.ProjectInstance projectInstance, ImmutableArray<MSBuildDiagnostic> diagnostics) BuildProject(string filePath)
+        public // (MSB.Execution.ProjectInstance projectInstance, ImmutableArray<MSBuildDiagnostic> diagnostics) 
+            Tuple<MSB.Execution.ProjectInstance, ImmutableArray<MSBuildDiagnostic>>
+            BuildProject(string filePath)
         {
             using (_sdksPathResolver.SetSdksPathEnvironmentVariable(filePath))
             {
@@ -72,8 +74,8 @@ namespace OmniSharp.MSBuild
                 var diagnostics = msbuildLogger.GetDiagnostics();
 
                 return buildResult
-                    ? (projectInstance, diagnostics)
-                    : (null, diagnostics);
+                    ? new Tuple<MSB.Execution.ProjectInstance, ImmutableArray<MSBuildDiagnostic>>(projectInstance, diagnostics)
+                    : new Tuple<MSB.Execution.ProjectInstance, ImmutableArray<MSBuildDiagnostic>>(null, diagnostics);
             }
         }
 

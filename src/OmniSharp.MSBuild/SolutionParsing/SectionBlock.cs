@@ -14,8 +14,10 @@ namespace OmniSharp.MSBuild.SolutionParsing
             Properties = properties;
         }
 
-        protected static (string name, ImmutableArray<Property> properties) ParseNameAndProperties(
-            string startSection, string endSection, string headerLine, Scanner scanner)
+        protected static // (string name, ImmutableArray<Property> properties)
+            Tuple<string, ImmutableArray<Property>>
+            ParseNameAndProperties(
+                string startSection, string endSection, string headerLine, Scanner scanner)
         {
             var startIndex = startSection.Length;
             if (!startSection.EndsWith("("))
@@ -45,7 +47,7 @@ namespace OmniSharp.MSBuild.SolutionParsing
                 }
             }
 
-            return (name, properties.ToImmutable());
+            return new Tuple<string, ImmutableArray<Property>>(name, properties.ToImmutable());
         }
     }
 }

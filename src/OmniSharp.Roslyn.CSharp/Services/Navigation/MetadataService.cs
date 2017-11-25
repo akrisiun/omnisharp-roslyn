@@ -31,7 +31,9 @@ namespace OmniSharp.Roslyn.CSharp.Services.Navigation
                 if (symbol != null && symbol.ContainingAssembly.Name == request.AssemblyName)
                 {
                     var cancellationSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(request.Timeout));
-                    var (metadataDocument, documentPath) = await _metadataHelper.GetAndAddDocumentFromMetadata(project, symbol, cancellationSource.Token);
+                    var t = await _metadataHelper.GetAndAddDocumentFromMetadata(project, symbol, cancellationSource.Token);
+                    var metadataDocument = t.Item1; // (metadataDocument, documentPath)
+                    var documentPath = t.Item2;
                     if (metadataDocument != null)
                     {
                         var source = await metadataDocument.GetTextAsync();

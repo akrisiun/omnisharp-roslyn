@@ -63,7 +63,9 @@ namespace OmniSharp.Roslyn
             return GetTypeDisplayString(topLevelSymbol);
         }
 
-        public async Task<(Document metadataDocument, string documentPath)> GetAndAddDocumentFromMetadata(Project project, ISymbol symbol, CancellationToken cancellationToken = new CancellationToken())
+        // Document metadataDocument, string documentPath
+        public async Task<Tuple<Document, string>> 
+                GetAndAddDocumentFromMetadata(Project project, ISymbol symbol, CancellationToken cancellationToken = new CancellationToken())
         {
             var fileName = GetFilePathForSymbol(project, symbol);
 
@@ -101,7 +103,8 @@ namespace OmniSharp.Roslyn
                 _metadataDocumentCache[fileName] = metadataDocument;
             }
 
-            return (metadataDocument, fileName);
+            // return  (metadataDocument, fileName);
+            return new Tuple<Document, string>(metadataDocument, fileName);
         }
 
         public async Task<Location> GetSymbolLocationFromMetadata(ISymbol symbol, Document metadataDocument, CancellationToken cancellationToken = new CancellationToken())

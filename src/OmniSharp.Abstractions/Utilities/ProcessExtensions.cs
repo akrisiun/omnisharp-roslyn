@@ -8,7 +8,8 @@ namespace OmniSharp.Utilities
     public static class ProcessExtensions
     {
         private static Thread s_backgroundWatcher;
-        private static List<(Process process, Action action)> s_watchedProcesses;
+        // private static List<(Process process, Action action)> s_watchedProcesses;
+        private static List<Tuple<Process, Action>> s_watchedProcesses;
 
         public static void OnExit(this Process process, Action action)
         {
@@ -20,11 +21,12 @@ namespace OmniSharp.Utilities
                 {
                     for (int i = s_watchedProcesses.Count - 1; i >= 0; --i)
                     {
-                        var (p, a) = s_watchedProcesses[i];
-                        if (p.HasExited)
+                        // var (p, a) 
+                        var x = s_watchedProcesses[i];
+                        if (x.Item1.HasExited)
                         {
                             s_watchedProcesses.RemoveAt(i);
-                            a();
+                            x.Item2();
                         }
                     }
                 }
@@ -48,10 +50,10 @@ namespace OmniSharp.Utilities
                 {
                     if (s_watchedProcesses == null)
                     {
-                        s_watchedProcesses = new List<(Process process, Action action)>();
+                        s_watchedProcesses = new List<Tuple<Process, Action>>(); // (Process process, Action action)>();
                     }
 
-                    s_watchedProcesses.Add((process, action));
+                    s_watchedProcesses.Add(new Tuple<Process, Action>(process, action));
 
                     if (s_backgroundWatcher == null)
                     {
@@ -86,14 +88,17 @@ namespace OmniSharp.Utilities
         {
             foreach (var entry in GetAllProcessIds())
             {
-                if (entry.parentId == processId)
+                var id = entry.Item1;
+                var parentId = entry.Item2;
+                if (parentId == processId)
                 {
-                    yield return Process.GetProcessById(entry.id);
+                    yield return Process.GetProcessById(id); // entry.id);
                 }
             }
         }
 
-        private static IEnumerable<(int id, int parentId)> GetAllProcessIds()
+        private static IEnumerable<Tuple<int, int>> // <(int id, int parentId)>
+                GetAllProcessIds()
         {
             var startInfo = new ProcessStartInfo
             {
@@ -105,7 +110,7 @@ namespace OmniSharp.Utilities
                 RedirectStandardError = true
             };
 
-            var entries = new List<(int processId, int parentProcessId)>();
+            var entries = new List<Tuple<int, int>>(); // (int processId, int parentProcessId)>();
 
             var ps = Process.Start(startInfo);
             ps.BeginOutputReadLine();
@@ -120,7 +125,7 @@ namespace OmniSharp.Utilities
                 if (Int32.TryParse(parts[0], out var ppid) &&
                     Int32.TryParse(parts[1], out var pid))
                 {
-                    entries.Add((pid, ppid));
+                    entries.Add(new Tuple<int, int>(pid, ppid));
                 }
             };
 
