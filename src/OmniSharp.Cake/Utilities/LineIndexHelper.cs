@@ -51,11 +51,13 @@ namespace OmniSharp.Cake.Utilities
             return index;
         }
 
-        public static async Task<(int, string)> TranslateFromGenerated(string fileName, int index, OmniSharpWorkspace workspace, bool sameFile)
+        public static async // Task<(int, string)>
+            Task<Tuple<int, string>> 
+            TranslateFromGenerated(string fileName, int index, OmniSharpWorkspace workspace, bool sameFile)
         {
             if (string.IsNullOrEmpty(fileName))
             {
-                return (-1, fileName);
+                return new Tuple<int, string>(-1, fileName);
             }
 
             if (PlatformHelper.IsWindows)
@@ -65,13 +67,13 @@ namespace OmniSharp.Cake.Utilities
             var document = workspace.GetDocument(fileName);
             if (document == null)
             {
-                return (-1, fileName);
+                return new Tuple<int, string>(-1, fileName);
             }
 
             var sourceText = await document.GetTextAsync();
             if (index > sourceText.Lines.Count)
             {
-                return (-1, fileName);
+                return new Tuple<int, string>(-1, fileName);
             }
 
             for (var i = index; i >= 0; i--)
@@ -96,15 +98,15 @@ namespace OmniSharp.Cake.Utilities
                 }
                 if (sameFile && !newFileName.Equals(fileName))
                 {
-                    return (-1, fileName);
+                    return new Tuple<int, string>(-1, fileName);
                 }
 
                 var newIndex = lineNumber - 2 + (index - i);
 
-                return (newIndex, newFileName);
+                return new Tuple<int, string> (newIndex, newFileName);
             }
 
-            return (-1, fileName);
+            return new Tuple<int, string> (-1, fileName);
         }
     }
 }

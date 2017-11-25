@@ -8,8 +8,15 @@ In order to build OmniSharp, the [.NET 4.6 targeting pack](http://go.microsoft.c
 
 **Mono 5.2.0** or greater is required. You can install this using the latest [.pkg](http://www.mono-project.com/download/#download-mac) or install it view [Homebrew](https://brew.sh/):
 
+https://github.com/OmniSharp/omnisharp-roslyn/releases/download/v1.27.2/omnisharp.http-mono.tar.gz
+
+
 ```
 brew update
+
+brew tap  akrisiun/aliases
+brew i akrisiun/omni-mono
+
 brew install mono
 brew install caskroom/cask/mono-mdk
 ```

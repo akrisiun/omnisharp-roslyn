@@ -202,7 +202,7 @@ namespace OmniSharp.DotNet
         private void UpdateFileReferences(ProjectState state, IEnumerable<string> fileReferences)
         {
             var metadataReferences = new List<MetadataReference>();
-            var fileReferencesToRemove = state.FileMetadataReferences.Keys.ToHashSet();
+            var fileReferencesToRemove = EnumerableExtensions.ToHashSet(state.FileMetadataReferences.Keys); // .ToHashSet();
 
             foreach (var fileReference in fileReferences)
             {
@@ -245,7 +245,7 @@ namespace OmniSharp.DotNet
         private void UpdateProjectReferences(ProjectState state, IEnumerable<ProjectDescription> projectReferencesLatest)
         {
             var projectReferences = new List<ProjectReference>();
-            var projectReferencesToRemove = state.ProjectReferences.Keys.ToHashSet();
+            var projectReferencesToRemove = EnumerableExtensions.ToHashSet(state.ProjectReferences.Keys); // .ToHashSet();
 
             foreach (var description in projectReferencesLatest)
             {
@@ -274,8 +274,12 @@ namespace OmniSharp.DotNet
                 _workspace.AddProjectReference(state.Id, reference);
             }
 
-            foreach (var reference in projectReferencesToRemove)
+            var n = projectReferencesToRemove.GetEnumerator();
+            // foreach (var reference in )
+            while (n.MoveNext())
             {
+                var reference = n.Current;
+                
                 var toRemove = state.ProjectReferences[reference];
                 state.ProjectReferences.Remove(reference);
                 _workspace.RemoveProjectReference(state.Id, new ProjectReference(toRemove));

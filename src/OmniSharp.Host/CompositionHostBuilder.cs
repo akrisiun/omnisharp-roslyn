@@ -92,6 +92,8 @@ namespace OmniSharp
             MSBuildInstance instanceToRegister = null;
             var invalidVSFound = false;
 
+            logger.LogInformation($"RegisterMSBuildInstance started");
+
             foreach (var instance in msbuildLocator.GetInstances())
             {
                 if (instance.IsInvalidVisualStudio())

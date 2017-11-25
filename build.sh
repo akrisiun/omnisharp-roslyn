@@ -13,8 +13,10 @@ fi
 export FrameworkPathOverride=/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5
 
 dotnet restore OmniSharp.sln
-dotnet build   OmniSharp.sln
-# bash ./scripts/cake-bootstrap.sh "$@"
+# dotnet build   OmniSharp.sln
+dotnet build src/OmniSharp.Stdio/OmniSharp.Stdio.csproj
+dotnet build src/OmniSharp.Stdio/OmniSharp.Stdio.csproj -o $PWD/bin
 
+# bash ./scripts/cake-bootstrap.sh "$@"
 # cd src/OmniSharp.DotNet.ProjectModel/
 # dotnet add OmniSharp.DotNet.ProjectModel.csproj package System.Runtime

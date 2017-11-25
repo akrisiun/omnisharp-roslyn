@@ -30,7 +30,10 @@ namespace OmniSharp.Cake.Services
 
         public void Start(int port, string workingDirectory)
         {
-            var (fileName, arguments) = GetMonoRuntime();
+            //  var (fileName, arguments) 
+            var t = GetMonoRuntime();
+            var fileName = t.Item1;
+            var arguments = t.Item2;
 
             if (fileName == null)
             {
@@ -80,8 +83,12 @@ namespace OmniSharp.Cake.Services
             _process.BeginOutputReadLine();
         }
 
-        private (string, string) GetMonoRuntime()
+        private // (string, string) 
+            Tuple<string, string>
+            GetMonoRuntime()
         {
+            _logger.LogDebug($"ps -fp {Process.GetCurrentProcess().Id} | tail -n1 | awk '{{print $8}}");
+
             // Check using ps how process was started.
             var startInfo = new ProcessStartInfo
             {
@@ -90,19 +97,22 @@ namespace OmniSharp.Cake.Services
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
             };
+
             var process = Process.Start(startInfo);
             var runtime = process.StandardOutput.ReadToEnd().TrimEnd('\n');
             process.WaitForExit();
+
+            _logger.LogDebug($"GetMonoRuntime: Runtime={runtime}");
 
             // If OmniSharp bundled Mono runtime, use bootstrap script.
             var script = Path.Combine(Path.GetDirectoryName(runtime), "run");
             if (File.Exists(script))
             {
-                return (script, "--no-omnisharp ");
+                return new Tuple<string, string>(script, "--no-omnisharp ");
             }
 
             // Else use mono directly.
-            return (runtime, string.Empty);
+            return new Tuple<string, string>(runtime, string.Empty);
         }
 
         public string ServerExecutablePath { get; set; }

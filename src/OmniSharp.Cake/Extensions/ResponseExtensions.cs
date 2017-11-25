@@ -35,9 +35,10 @@ namespace OmniSharp.Cake.Extensions
 
         public static async Task<NavigateResponse> TranslateAsync(this NavigateResponse response, OmniSharpWorkspace workspace, Request request)
         {
-            var (line, _) = await LineIndexHelper.TranslateFromGenerated(request.FileName, response.Line, workspace, true);
+            //var (line, _)
+            var t = await LineIndexHelper.TranslateFromGenerated(request.FileName, response.Line, workspace, true);
 
-            response.Line = line;
+            response.Line = t.Item1; // line;
 
             return response;
         }
@@ -95,12 +96,17 @@ namespace OmniSharp.Cake.Extensions
                 return quickFix;
             }
 
-            var (line, newFileName) = await LineIndexHelper.TranslateFromGenerated(fileName, quickFix.Line, workspace, sameFile);
+            // var (line, newFileName) 
+            var t1 = await LineIndexHelper.TranslateFromGenerated(fileName, quickFix.Line, workspace, sameFile);
+            var line = t1.Item1;
+            var newFileName = t1.Item2;
 
             quickFix.Line = line;
             quickFix.FileName = newFileName;
 
-            (line, _) = await LineIndexHelper.TranslateFromGenerated(fileName, quickFix.EndLine, workspace, sameFile);
+            // (line, _) 
+            var t2 = await LineIndexHelper.TranslateFromGenerated(fileName, quickFix.EndLine, workspace, sameFile);
+            line = t2.Item1;
 
             quickFix.EndLine = line;
 
