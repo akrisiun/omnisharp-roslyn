@@ -23,6 +23,8 @@ using Xunit.Abstractions;
 
 namespace TestUtility
 {
+    using LanguageNames = OmniSharp.LanguageNames;
+
     public class OmniSharpTestHost : DisposableObject
     {
         private const string MSBuildSDKsPath = "MSBuildSDKsPath";
@@ -105,7 +107,8 @@ namespace TestUtility
 
             if (!File.Exists(dotNetPath))
             {
-                throw new InvalidOperationException($"Local .NET CLI path does not exist. Did you run build.(ps1|sh) from the command line?");
+                throw new InvalidOperationException($@"No file {dotNetPath} :
+                      Local .NET CLI path does not exist. Did you run build.(ps1|sh) from the command line?");
             }
 
             var builder = new Microsoft.Extensions.Configuration.ConfigurationBuilder();

@@ -11,6 +11,8 @@ using OmniSharp.Services;
 
 namespace TestUtility
 {
+    using LanguageNames = OmniSharp.LanguageNames;
+
     public static class TestHelpers
     {
         public static OmniSharpWorkspace CreateCsxWorkspace(TestFile testFile)

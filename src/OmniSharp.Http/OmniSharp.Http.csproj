@@ -9,6 +9,10 @@
         <RuntimeIdentifiers>win7-x64;win7-x86</RuntimeIdentifiers>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <OutputPath>d:\Beta\VfpX\omnisharp-roslyn\bin\</OutputPath>
+    </PropertyGroup>
+
     <ItemGroup>
         <ProjectReference Include="..\OmniSharp.DotNet\OmniSharp.DotNet.csproj" />
         <ProjectReference Include="..\OmniSharp.DotNetTest\OmniSharp.DotNetTest.csproj" />
@@ -20,6 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Libuv" Version="1.10.0" />
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="$(MicrosoftAspNetCoreDiagnosticsVersion)" />
         <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="$(MicrosoftAspNetCoreServerKestrelVersion)" />
         <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="$(MicrosoftAspNetCoreHostingVersion)" />
