@@ -11,12 +11,20 @@ using MSB = Microsoft.Build;
 
 namespace OmniSharp.MSBuild
 {
-    internal class ProjectLoader
+    public class ProjectLoader
     {
         private readonly ILogger _logger;
         private readonly Dictionary<string, string> _globalProperties;
         private readonly MSBuildOptions _options;
         private readonly SdksPathResolver _sdksPathResolver;
+
+        public static ProjectLoader Load(string solutionDirectory, ILoggerFactory fact, SdksPathResolver sdksPathResolver)
+        {
+            // SdksPathResolver sdksPathResolver = null;
+            ImmutableDictionary<string, string> propertyOverrides = ImmutableDictionary<string, string>.Empty;
+            var loader = new ProjectLoader(new MSBuildOptions(), solutionDirectory, propertyOverrides, fact, sdksPathResolver);
+            return loader;
+        }
 
         public ProjectLoader(MSBuildOptions options, string solutionDirectory, ImmutableDictionary<string, string> propertyOverrides, ILoggerFactory loggerFactory, SdksPathResolver sdksPathResolver)
         {
@@ -99,6 +107,10 @@ namespace OmniSharp.MSBuild
             }
 
             toolsVersion = GetLegalToolsetVersion(toolsVersion, projectCollection.Toolsets);
+
+            var vsV = Environment.GetEnvironmentVariable("VisualStudioVersion"); // @"14.0");
+            if (toolsVersion == "2.0" && !string.IsNullOrWhiteSpace(vsV))
+                toolsVersion = vsV;
 
             return projectCollection.LoadProject(filePath, toolsVersion);
         }

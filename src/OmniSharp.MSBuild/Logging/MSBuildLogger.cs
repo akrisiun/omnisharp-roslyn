@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace OmniSharp.MSBuild.Logging
 {
-    internal class MSBuildLogger : Microsoft.Build.Utilities.Logger
+    public class MSBuildLogger : Microsoft.Build.Utilities.Logger
     {
         private readonly ILogger _logger;
         private readonly List<MSBuildDiagnostic> _diagnostics;

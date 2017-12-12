@@ -13,7 +13,7 @@ namespace TestUtility
         protected AbstractTestFixture(ITestOutputHelper output)
         {
             this.TestOutput = output;
-            this.LoggerFactory = new LoggerFactory()
+            this.LoggerFactory = new LoggerFactoryX()
                 .AddXunit(output);
         }
 
@@ -40,6 +40,16 @@ namespace TestUtility
             }
 
             return host;
+        }
+    }
+
+    public class LoggerFactoryX :  LoggerFactory, ILoggerFactory
+    {
+
+        ILogger ILoggerFactory.CreateLogger(string categoryName)
+        {
+            var wrap = base.CreateLogger(categoryName);
+            return wrap;
         }
     }
 }

@@ -4,7 +4,16 @@
     <TargetFramework>net461</TargetFramework>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+
+    <MicrosoftNetTestSdkVersion>15.0.0</MicrosoftNetTestSdkVersion>
+    <XunitRunnerVisualStudioVersion>2.3.0-rc1-build3809</XunitRunnerVisualStudioVersion>
+    <XunitVersion>2.3.0-rc1-build3809</XunitVersion>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(MicrosoftNetTestSdkVersion)" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="$(XunitRunnerVisualStudioVersion)" />
+    <PackageReference Include="xunit" Version="$(XunitVersion)" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\app.config" Link="app.config" />
@@ -15,11 +24,6 @@
     <ProjectReference Include="..\TestUtility\TestUtility.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(MicrosoftNetTestSdkVersion)" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="$(XunitRunnerVisualStudioVersion)" />
-    <PackageReference Include="xunit" Version="$(XunitVersion)" />
-  </ItemGroup>
 
   <ItemGroup>
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />

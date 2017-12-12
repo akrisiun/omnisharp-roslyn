@@ -16,6 +16,8 @@ namespace TestUtility.Logging
 
         protected override void WriteMessage(LogLevel logLevel, string message)
         {
+            System.Console.WriteLine(message);
+            System.Diagnostics.Trace.WriteLine(message);
             _output.WriteLine(message);
         }
     }

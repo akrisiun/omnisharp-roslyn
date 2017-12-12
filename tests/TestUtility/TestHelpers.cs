@@ -59,6 +59,9 @@ namespace TestUtility
 
                 foreach (var testFile in testFiles)
                 {
+                    // microsoft.codeanalysis.workspaces.common\2.4.0\lib\net46\Microsoft.CodeAnalysis.Workspaces.dll
+                    // Microsoft.CodeAnalysis.DocumentInfo
+
                     var documentInfo = DocumentInfo.Create(
                         id: DocumentId.CreateNewId(projectInfo.Id),
                         name: testFile.FileName,
