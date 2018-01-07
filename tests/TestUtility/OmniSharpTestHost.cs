@@ -43,7 +43,8 @@ namespace TestUtility
         private readonly CompositionHost _compositionHost;
         private readonly string _oldMSBuildSdksPath;
 
-        private Dictionary<(string name, string language), Lazy<IRequestHandler, OmniSharpRequestHandlerMetadata>> _handlers;
+        // valueTuple(string name, string language)
+        private Dictionary<Tuple<string, string>, Lazy<IRequestHandler, OmniSharpRequestHandlerMetadata>> _handlers;
 
         public ILoggerFactory LoggerFactory { get; }
         public OmniSharpWorkspace Workspace { get; }
@@ -169,11 +170,14 @@ namespace TestUtility
             {
                 var exports = this._compositionHost.GetExports<Lazy<IRequestHandler, OmniSharpRequestHandlerMetadata>>();
                 _handlers = exports.ToDictionary(
-                    keySelector: export => (export.Metadata.EndpointName, export.Metadata.Language),
+                    keySelector: export => new Tuple<string, string>(export.Metadata.EndpointName, export.Metadata.Language),
                     elementSelector: export => export);
             }
 
-            return (THandler)_handlers[(name, languageName)].Value;
+            return (THandler)_handlers
+            [ new Tuple<string, string>
+                (name, languageName)
+            ].Value;
         }
 
         public WorkspaceInformationService GetWorkspaceInformationService()
