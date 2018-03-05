@@ -112,7 +112,7 @@ if($Experimental.IsPresent -and !($Mono.IsPresent)) {
 
 # Is this a dry run?
 $UseDryRun = "";
-if($WhatIf.IsPresent) {
+if($WhatIf.IsPresent -or $PSVersionTable.Platform -eq "Unix") {
     $UseDryRun = "-dryrun"
 }
 
@@ -125,8 +125,11 @@ if ((Test-Path $PSScriptRoot) -and !(Test-Path $TOOLS_DIR)) {
 # Make sure that packages.config exist.
 if (!(Test-Path $PACKAGES_CONFIG)) {
     Write-Verbose -Message "Downloading packages.config..."
-    try { (New-Object System.Net.WebClient).DownloadFile("http://cakebuild.net/download/bootstrapper/packages", $PACKAGES_CONFIG) } catch {
-        Throw "Could not download packages.config."
+    try { 
+        (New-Object System.Net.WebClient).DownloadFile("http://cakebuild.net/download/bootstrapper/packages", $PACKAGES_CONFIG) 
+    } catch {
+        # Throw
+        Write-Host "Could not download packages.config."
     }
 }
 
@@ -171,7 +174,8 @@ if(-Not $SkipToolPackageRestore.IsPresent) {
     $NuGetOutput = Invoke-Expression "&`"$NUGET_EXE`" install -ExcludeVersion -OutputDirectory `"$TOOLS_DIR`""
 
     if ($LASTEXITCODE -ne 0) {
-        Throw "An error occured while restoring NuGet tools."
+        # Throw
+        Write-Host "An error occured while restoring NuGet tools."
     }
     else
     {
@@ -183,10 +187,23 @@ if(-Not $SkipToolPackageRestore.IsPresent) {
 
 # Make sure that Cake has been installed.
 if (!(Test-Path $CAKE_EXE)) {
-    Throw "Could not find Cake.exe at $CAKE_EXE"
+    # Throw
+    Write-Host "Could not find Cake.exe at $CAKE_EXE"
 }
 
 # Start Cake
-Write-Host "Running build script..."
-Invoke-Expression "& `"$CAKE_EXE`" `"$Script`" -target=`"$Target`" -configuration=`"$Configuration`" -verbosity=`"$Verbosity`" $UseMono $UseDryRun $UseExperimental $ScriptArgs"
+ 
+if ($PSVersionTable.Platform -eq "Unix") 
+{
+    Write-Host "Running dotnet msbuild..."
+
+    dotnet restore ./OmniSharp.sln
+    dotnet msbuild ./OmniSharp.sln
+    # dotnet build ./tests/TestUtility/TestUtility.csproj  /clp:PerformanceSummary
+ }
+else {
+    Write-Host "Running build script..."
+    Invoke-Expression "& `"$CAKE_EXE`" `"$Script`" -target=`"$Target`" -configuration=`"$Configuration`" -verbosity=`"$Verbosity`" $UseMono $UseDryRun $UseExperimental $ScriptArgs"
+}
+
 exit $LASTEXITCODE
