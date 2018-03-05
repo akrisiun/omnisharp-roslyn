@@ -3,6 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    
+    <!-- C# 7.1 -->
+    <LangVersion>Latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
